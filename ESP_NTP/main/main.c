@@ -38,8 +38,8 @@ extern esp_mqtt_client_handle_t client;
 void wifi_application_connected_events(void) {
 	ESP_LOGI(TAG, "WiFi Application Connected!");
 	sntp_time_sync_task_start();
-	set_led_work_state(LED_WORK_STATE_FAST_BLINK);
-	mqtt_app_start();
+//	set_led_work_state(LED_WORK_STATE_FAST_BLINK);
+//	mqtt_app_start(); // do not start mqtt not needed in current project
 }
 
 void app_main(void) {
@@ -67,19 +67,22 @@ void app_main(void) {
 	// Config WiFi_Reset_button
 //	wifi_reset_button_config();
 
-	uart_app_start();
+//	uart_app_start();
 
 //	temp_rh_meas_app_start();
 
 	// Set connected event callback
 	wifi_app_set_callback(wifi_application_connected_events);
 
-	while (1) {
-		if (closeClientConnection) {
-			closeClientConnection = false;
-			esp_mqtt_client_stop(client);
-		}
-		vTaskDelay(pdMS_TO_TICKS(10));
-	}
+	/*
+	 * not needed no MQTT is used
+	 */
+//	while (1) {
+//		if (closeClientConnection) {
+//			closeClientConnection = false;
+//			esp_mqtt_client_stop(client);
+//		}
+//		vTaskDelay(pdMS_TO_TICKS(10));
+//	}
 
 }

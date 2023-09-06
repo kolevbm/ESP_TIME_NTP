@@ -187,9 +187,9 @@ static void wifi_app_default_wifi_init(void)
 static void wifi_app_soft_ap_config(void)
 {
 	// SoftAP - WiFi access point configuration
-    char ssid[] = "BeemHubYYnnn";
+    char ssid[] = "VBClockYYnnn";
     memset(ssid, 0, sizeof(ssid));
-    sprintf(ssid, "BeemHub%u", serialNumber);
+    sprintf(ssid, "VBClock%u", serialNumber);
 
 	wifi_config_t ap_config = { .ap = { .ssid = WIFI_AP_SSID, .ssid_len = strlen(WIFI_AP_SSID), .password =
 	WIFI_AP_PASSWORD, .channel = WIFI_AP_CHANNEL, .ssid_hidden = WIFI_AP_SSID_HIDDEN, .authmode = WIFI_AUTH_WPA2_PSK,

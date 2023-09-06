@@ -15,6 +15,7 @@
 #include "http_server.h"
 #include "sntp_time_sync.h"
 #include "wifi_app.h"
+#include "rgb_led.h"
 
 static const char TAG[] = "sntp_time_sync";
 
@@ -59,10 +60,12 @@ static void sntp_time_sync_obtain_time(void)
 	// Check the time, in case we need to initialize/reinitialize
 	if (time_info.tm_year < (2016 - 1900))
 	{
+
 		sntp_time_sync_init_sntp();
 		// Set the local time zone
 		setenv("TZ", "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00", 1);
 		tzset();
+		set_led_work_state(LED_WORK_STATE_SLOW_BLINK);
 	}
 }
 
@@ -72,6 +75,7 @@ static void sntp_time_sync_obtain_time(void)
  */
 static void sntp_time_sync(void *pvParam)
 {
+  ESP_LOGI(TAG, "SNTP Task started");
 	while (1)
 	{
 		sntp_time_sync_obtain_time();

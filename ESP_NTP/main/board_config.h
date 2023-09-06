@@ -39,6 +39,6 @@
 #define I2C_SCL_PIN			GPIO_NUM_22		// I2C clock					ar[oe=0, ie=1]
 #define I2C_SDA_PIN			GPIO_NUM_21		// I2C data						ar[oe=0, ie=1]
 #define GPI_PIN				GPIO_NUM_34		// general purpose input		ar[oe=0, ie=1, wpu]
-#define GPO_PIN				GPIO_NUM_4		// general purpose output		LED status
-//#define GPO_PIN				GPIO_NUM_2	// blue Led on DevKit
+//#define GPO_PIN				GPIO_NUM_4		// general purpose output		LED status
+#define GPO_PIN				GPIO_NUM_2	// blue Led on DevKit
 #endif /* MAIN_BOARD_CONFIG_H_ */

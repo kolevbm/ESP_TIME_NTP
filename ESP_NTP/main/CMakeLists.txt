@@ -10,9 +10,9 @@ idf_component_register(
          app_nvs.c
          wifi_reset_button.c
          sntp_time_sync.c
-         mqtt_bk.c
+         #mqtt_bk.c
          #uart_bk.c
-         UART/uart_bk_WORKING.c
+         #UART/uart_bk_WORKING.c
          tasks_common.c
     INCLUDE_DIRS "."   # optional, add here public include directories
     EMBED_FILES webpage/app.css 

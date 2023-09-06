@@ -12,7 +12,7 @@ $(document).ready(function(){
 	getSSID();
 	getUpdateStatus();
 	// startDHTSensorInterval();
-	// startLocalTimeInterval();
+	startLocalTimeInterval();
 	// startWifiConnectStatusInterval();
 	getConnectInfo();
 	$("#connect_wifi").on("click", function(){

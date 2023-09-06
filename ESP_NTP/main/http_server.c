@@ -28,7 +28,6 @@
 #include "rgb_led.h"
 
 //EXTERN variables
-extern float temperature, humidity;
 extern esp_timer_handle_t periodic_timer;
 extern bool g_sta_connected;
 bool OTA_update = false;
