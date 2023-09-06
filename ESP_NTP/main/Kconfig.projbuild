@@ -1,0 +1,54 @@
+# put here your custom config value
+menu "MQTT credentials"
+config MQTT_BROKER_URL
+	string "Broker URL"
+	default "mqtt://mqtt.eclipseprojects.io"
+	help
+		MQTT broker domain (URL as string)
+	
+config MQTT_BROKER_IP
+	string "Broker domain IP"
+	default "84.43.202.81"
+	help
+		MQTT broker domain (ipv4 as string)
+
+config BROKER_AS_IP
+    bool "Use Broker IP instead of URL"
+    default 0
+    help
+    	Check this option if you want to use the ip address of the broker instead of it's url address
+
+config MQTT_PORT
+    int "MQTT port"
+    default "16649"
+	
+
+config MQTT_USER
+    string "mqtt user"
+    default "vb"
+	help
+	MQTT user pair with MQTT password
+
+config MQTT_PASS
+    string "mqtt Password"
+    default "PAss1020"
+	help
+	MQTT password pair with MQTT user
+	
+endmenu
+
+menu "BeeM HUB Configuration"
+
+config HUB_SN
+    int "Serial Number"
+	    default 23000
+    help
+        BeeM HUB device serial number XX- year YYY - product number for current year
+        
+config COMMIT_NEW_SERIAL
+    bool "Save Serial number to NVS"
+    default 0
+    help
+    	Check this option if the device is Funky Fresh or needs a Refresh of serial number
+
+endmenu

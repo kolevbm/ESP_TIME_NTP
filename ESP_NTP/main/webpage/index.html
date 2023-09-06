@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<script src='jquery-3.3.1.min.js'></script>
+	<link rel="stylesheet" href="app.css">
+	<script async src="app.js"></script>
+	<title>Осветление</title>
+</head>
+
+<body>
+	<header>
+		<h1>Осветление производсто</h1>
+	</header>
+
+	<div id="EspSSID">
+		<h2>SSID</h2>
+		<label for="ap_ssid">Access Point SSID: </label>
+		<div id="ap_ssid"></div>
+	</div>
+	<hr>
+
+	<div id="LocalTime">
+		<h2>Време по SNTP</h2>
+		<label for="local_time">Connect to WiFi for Local Time: </label>
+		<div id="local_time"></div>
+	</div>
+
+	<hr>
+	<style>
+		.alarmbtns {
+			padding: 30px;
+			margin: 10px;
+		}
+	</style>
+	<div class="alarms">
+		<h2>Аларми</h2>
+
+		<p>
+			<label for="alarm1">Аларма 1: </label>
+			<input type="time" id="alarm1" name="alarm1" required />
+		</p>
+		<p>
+			<label for="alarm2">Аларма 2: </label>
+			<input type="time" id="alarm2" name="alarm2" required />
+		</p>
+		<p>
+			<label for="alarm3">Аларма 3: </label>
+			<input type="time" id="alarm3" name="alarm3" required />
+		</p>
+		<p>
+			<label for="alarm4">Аларма 4: </label>
+			<input type="time" id="alarm4" name="alarm4" required />
+		</p>
+		<p>
+			<label for="alarm5">Аларма 5: </label>
+			<input type="time" id="alarm5" name="alarm5" required />
+		</p>
+		<p>
+			<label for="alarm6">Аларма 6: </label>
+			<input type="time" id="alarm6" name="alarm6" required />
+		</p>
+		<p>
+			<label for="alarm7">Аларма 7: </label>
+			<input type="time" id="alarm7" name="alarm7" required />
+		</p>
+
+		<input class="alarmbtns" type="submit" id="submitBtn" name="submitBtn" value="Запис" />
+		<input class="alarmbtns" type="button" id="readBtn" name="readBtn" value="Четене" />
+
+
+	</div>
+	<hr>
+	<div id="WiFiConnect">
+		<h2>WiFi Connect</h2>
+		<section>
+			<input id="connect_ssid" type="text" maxlength="32" placeholder="SSID" value="">
+			<input id="connect_pass" type="password" maxlength="64" placeholder="Password" value="">
+			<!-- <input type="checkbox" onclick="showPassword()">Show Password -->
+		</section>
+		<div class="buttons">
+			<input id="connect_wifi" type="button" value="Connect" />
+		</div>
+		<div id="wifi_connect_credentials_errors"></div>
+		<h4 id="wifi_connect_status"></h4>
+	</div>
+
+	<div id="ConnectInfo">
+		<section>
+			<div id="connected_ap_label"></div>
+			<div id="connected_ap"></div>
+		</section>
+		<div id="ip_address_label"></div>
+		<div id="wifi_connect_ip"></div>
+		<div id="netmask_label"></div>
+		<div id="wifi_connect_netmask"></div>
+		<div id="gateway_label"></div>
+		<div id="wifi_connect_gw"></div>
+		<div class="buttons">
+			<input id="disconnect_wifi" type="button" value="Disconnect" />
+		</div>
+	</div>
+	<hr>
+	<div id="OTA">
+		<h2>Firmware Update</h2>
+		<label id="latest_firmware_label">Latest Firmware: </label>
+		<div id="latest_firmware"></div>
+		<input type="file" id="selected_file" accept=".bin" style="display: none;" onchange="getFileInfo()" />
+		<div class="buttons">
+			<input type="button" value="Select File" onclick="document.getElementById('selected_file').click();" />
+			<input type="button" value="Update Firmware" onclick="updateFirmware()" />
+		</div>
+		<h4 id="file_info"></h4>
+		<h4 id="ota_update_status"></h4>
+	</div>
+	<hr>
+
+
+
+</body>
+<html>
