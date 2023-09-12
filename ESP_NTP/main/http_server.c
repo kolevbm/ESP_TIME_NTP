@@ -30,6 +30,12 @@
 //EXTERN variables
 extern esp_timer_handle_t periodic_timer;
 extern bool g_sta_connected;
+
+
+
+// GLOBAL variables
+char alarmJSON[250];
+
 bool OTA_update = false;
 // Tag used for ESP serial console messages
 static const char TAG[] = "http_server";
@@ -368,6 +374,9 @@ esp_err_t http_server_OTA_status_handler(httpd_req_t *req)
 }
 
 
+
+
+
 /**
  * wifiConnect.json handler is invoked after the connect button is pressed
  * and handles receiving the SSID and password entered by the user
@@ -543,6 +552,139 @@ static esp_err_t http_server_get_ap_ssid_json_handler(httpd_req_t *req)
 	return ESP_OK;
 }
 
+
+/**
+ * Submit Alarms
+ * @param req HTTP request for which the uri needs to be handled.
+ * @return ESP_OK
+ */
+static esp_err_t http_server_submitAlarms_json_handler(httpd_req_t *req)
+{
+
+	ESP_LOGI(TAG, "/submitAlarms.json requested");
+	// todo: create a function to clear and store the new alarm settings
+	//app_nvs_clear_sta_creds();
+
+
+	size_t len_alarm = 0;
+	char *alarm_str = NULL;
+
+	char alarm1[15], alarm2[15], alarm3[15], alarm4[15], alarm5[15], alarm[15], alarm6[15], alarm7[15] ;
+
+
+	// Get Alarm headers
+
+	len_alarm = httpd_req_get_hdr_value_len(req, "alarm1") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "alarm1", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => alarm1: %s", alarm_str);
+			strcpy(alarm1, alarm_str);
+		}
+	}
+
+	len_alarm = httpd_req_get_hdr_value_len(req, "alarm2") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "alarm2", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => alarm2: %s", alarm_str);
+			strcpy(alarm2, alarm_str);
+		}
+	}
+
+	len_alarm = httpd_req_get_hdr_value_len(req, "alarm3") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "alarm3", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => alarm3: %s", alarm_str);
+			strcpy(alarm3, alarm_str);
+		}
+	}
+
+	len_alarm = httpd_req_get_hdr_value_len(req, "alarm4") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "alarm4", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => alarm4: %s", alarm_str);
+			strcpy(alarm4, alarm_str);
+		}
+	}
+
+	len_alarm = httpd_req_get_hdr_value_len(req, "alarm5") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "alarm5", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => alarm5: %s", alarm_str);
+			strcpy(alarm5, alarm_str);
+		}
+	}
+
+	len_alarm = httpd_req_get_hdr_value_len(req, "alarm6") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "alarm6", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => alarm6: %s", alarm_str);
+			strcpy(alarm6, alarm_str);
+		}
+	}
+
+	len_alarm = httpd_req_get_hdr_value_len(req, "alarm7") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "alarm7", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => alarm7: %s", alarm_str);
+			strcpy(alarm7, alarm_str);
+		}
+	}
+	sprintf(alarmJSON, "{\"alarm1\" : \"%s\",  \"alarm2\" : \"%s\", \"alarm3\" : \"%s\", \"alarm4\" : \"%s\", \"alarm5\" : \"%s\", \"alarm6\" : \"%s\", \"alarm7\" : \"%s\"}",
+						  alarm1, alarm2, alarm3, alarm4, alarm5, alarm6, alarm7);
+
+	esp_err_t err = app_nvs_save_alarms();
+	if(err == ESP_OK){
+	  ESP_LOGI(TAG, "alarm saved: %s", alarmJSON);
+	}
+	free(alarm_str);
+
+	return ESP_OK;
+}
+
+
+
+/**
+ * readAlarms.json handler responds by sending ESP32 Access Point SSID
+ * @param req HTTP request for which the uri needs to be handled.
+ * @return ESP_OK
+ */
+static esp_err_t http_server_readAlarms_json_handler(httpd_req_t *req)
+{
+	ESP_LOGI(TAG, "/readAlarms.json requested");
+	//todo: make that with return type of char array, e.g. make it flexible not with fixed alarmJSON[]
+	esp_err_t err = app_nvs_load_alarms();
+
+	if(err == ESP_OK){
+	  ESP_LOGI(TAG, "Read Alarms from NVS OK");
+	  httpd_resp_set_type(req, "application/json");
+	  httpd_resp_send(req, alarmJSON, strlen(alarmJSON));
+	}
+
+	return ESP_OK;
+}
+
+
 /**
  * Sets up the default httpd server configuration.
  * @return http server instance handle if successful, NULL otherwise.
@@ -645,6 +787,7 @@ static httpd_handle_t http_server_configure(void)
 				.handler = http_server_OTA_status_handler,
 				.user_ctx = NULL
 		};
+		httpd_register_uri_handler(http_server_handle, &OTA_status);
 
 		// register wifiConnect.json handler
 		httpd_uri_t wifi_connect_json = {
@@ -700,7 +843,23 @@ static httpd_handle_t http_server_configure(void)
 		};
 		httpd_register_uri_handler(http_server_handle, &ap_ssid_json);
 
+		// register readAlarms.json handler
+		httpd_uri_t readAlarms_json = {
+				.uri = "/readAlarms.json",
+				.method = HTTP_GET,
+				.handler = http_server_readAlarms_json_handler,
+				.user_ctx = NULL
+		};
+		httpd_register_uri_handler(http_server_handle, &readAlarms_json);
 
+		// register submitAlarms.json handler
+		httpd_uri_t submitAlarms_json = {
+				.uri = "/submitAlarms.json",
+				.method = HTTP_POST,
+				.handler = http_server_submitAlarms_json_handler,
+				.user_ctx = NULL
+		};
+		httpd_register_uri_handler(http_server_handle, &submitAlarms_json);
 		return http_server_handle;
 	}
 

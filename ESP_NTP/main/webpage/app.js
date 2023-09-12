@@ -5,6 +5,15 @@ var seconds 	= null;
 var otaTimerVar =  null;
 var wifiConnectInterval = null;
 
+
+let submitBtn = document.getElementById('submitBtn');
+submitBtn.addEventListener('click', submitAlarms);
+
+let readButt = document.getElementById('readBtn');
+readButt.addEventListener('click', readAlarms);
+
+
+
 /**
  * Initialize functions here.
  */
@@ -359,6 +368,7 @@ function submitAlarms()
 	let alarm5 = $("#alarm5").val();
 	let alarm6 = $("#alarm6").val();
 	let alarm7 = $("#alarm7").val();
+	console.log(`Submit button is pressed`);
 	
 	
 	$.ajax({
@@ -376,5 +386,32 @@ function submitAlarms()
 		data: {'timestamp': Date.now()}
 	});
 	
-	startWifiConnectStatusInterval();
+}
+
+/**
+ *  Read the alarms saved in the server.
+ */
+function readAlarms()
+{
+	console.log('readAlarms pressed');
+	
+	$.getJSON('/readAlarms.json', function(data) {
+			$("#alarm1").val(data["alarm1"]);
+			$("#alarm2").val(data["alarm2"]);
+			$("#alarm3").val(data["alarm3"]);
+			$("#alarm4").val(data["alarm4"]);
+			$("#alarm5").val(data["alarm5"]);
+			$("#alarm6").val(data["alarm6"]);
+			$("#alarm7").val(data["alarm7"]);
+
+			console.log(data["alarm1"]);
+			console.log(data["alarm2"]);
+			console.log(data["alarm3"]);
+			console.log(data["alarm4"]);
+			console.log(data["alarm5"]);
+			console.log(data["alarm6"]);
+			console.log(data["alarm7"]);
+			
+
+		});
 }

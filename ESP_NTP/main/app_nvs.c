@@ -15,12 +15,17 @@
 #include "app_nvs.h"
 #include "wifi_app.h"
 
+// EXTERN variables
+extern char alarmJSON;
+
+
 // Tag for logging to the monitor
 static const char TAG[] = "nvs";
 
 // NVS name space used for station mode credentials
 const char app_nvs_sta_creds_namespace[] = "stacreds";
 const char app_nvs_serial_namespace[] = "serial";
+const char app_nvs_alarms_namespace[] = "alarms";
 /**
  * Saves station mode Wifi credentials to NVS
  * @return ESP_OK if successful.
@@ -230,3 +235,84 @@ uint16_t app_nvs_load_serial_number (void)
   nvs_close (handle);
   return serialNumber;
 }
+
+
+/*
+ * Save the Alarms to the NVS
+ * @return ESP_OK
+ */
+esp_err_t app_nvs_save_alarms(void){
+
+  nvs_handle handle;
+  esp_err_t err;
+  ESP_LOGI(TAG, "Saving Alarms to flash");
+
+  err = nvs_open (app_nvs_alarms_namespace, NVS_READWRITE, &handle);
+
+  // Erase previous stored values in the namespace
+  err = nvs_erase_all (handle);
+  if (err != ESP_OK)
+  {
+	ESP_LOGI(TAG, "app_nvs_save_alarms: Error (%s) erasing Alarms namespace!", esp_err_to_name (err));
+  }
+
+  // todo: prepare the Alarms json to string or something like this
+
+  err = nvs_set_str (handle, "Alarms", &alarmJSON);
+
+  // Commit data to NVS
+  err = nvs_commit (handle);
+  if (err != ESP_OK)
+  {
+	ESP_LOGI(TAG, "app_nvs_save_serial_number: Error (%s) committing Serial Number to NVS!", esp_err_to_name (err));
+	return err;
+  }
+  else{
+	ESP_LOGI(TAG, "Writing of Alarms OK");
+  }
+  // Close the NVS handle
+  nvs_close (handle);
+
+  return ESP_OK;
+
+}
+
+/**
+ * Loads the previously saved Alarms.
+ * @return esp error type
+ */
+esp_err_t app_nvs_load_alarms (void)
+{
+  nvs_handle handle;
+  esp_err_t err;
+  // Open NVS
+  err = nvs_open (app_nvs_alarms_namespace, NVS_READWRITE, &handle);
+  ESP_LOGI(TAG, "nvs opened, now reading json");
+
+  // first get the size
+  size_t required_size;
+  err = nvs_get_str (handle, "Alarms", NULL, &required_size);
+  // second allocate memory for the string
+  char* str_value = malloc (required_size);
+  err = nvs_get_str(handle, "Alarms", str_value, &required_size);
+
+  switch (err) {
+	case ESP_OK:
+	  ESP_LOGI(TAG, "Alarms: %s", str_value);
+	  // after successful reading of NVS copy the json string in the extern variable
+	  strcpy(&alarmJSON, str_value);
+	  break;
+	case ESP_ERR_NVS_NOT_FOUND:
+	  ESP_LOGI(TAG, "Alarms not initialized yet");
+	  break;
+	default:
+	  ESP_LOGI(TAG, "Error (%s) reading!\n", esp_err_to_name (err));
+  }
+  // free the allocated memory
+  free(str_value);
+
+  // Close the NVS handle
+  nvs_close (handle);
+  return err;
+}
+

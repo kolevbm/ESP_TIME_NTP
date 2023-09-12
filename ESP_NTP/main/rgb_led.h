@@ -15,7 +15,10 @@ typedef enum led_woking_mode
   LED_WORK_STATE_SLOW_BLINK,
   LED_WORK_STATE_DARK,
   LED_WORK_STATE_LIGHT,
-  LED_WORK_STATE_OTA_UPDATE
+  LED_WORK_STATE_OTA_UPDATE,
+  LED_WIFI_NOT_CONNECTED,
+  LED_IDLE,
+  LED_SNTP_CONNECTED
 } led_woking_mode_e;
 
  void set_led_work_state(uint8_t workState);

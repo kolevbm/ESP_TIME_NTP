@@ -38,4 +38,16 @@ esp_err_t app_nvs_save_serial_number(void);
  */
 uint16_t app_nvs_load_serial_number(void);
 
+/*
+ * Save the Alarms to the NVS
+ * @return ESP_OK
+ */
+esp_err_t app_nvs_save_alarms(void);
+
+/**
+ * Loads the previously saved Alarms.
+ * @return esp error type
+ */
+esp_err_t app_nvs_load_alarms (void);
+
 #endif /* MAIN_APP_NVS_H_ */
