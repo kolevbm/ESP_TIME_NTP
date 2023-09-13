@@ -35,6 +35,7 @@ extern bool g_sta_connected;
 
 // GLOBAL variables
 char alarmJSON[250];
+SemaphoreHandle_t xSemaphoreAlarms = NULL;
 
 bool OTA_update = false;
 // Tag used for ESP serial console messages
@@ -672,13 +673,40 @@ static esp_err_t http_server_submitAlarms_json_handler(httpd_req_t *req)
 static esp_err_t http_server_readAlarms_json_handler(httpd_req_t *req)
 {
 	ESP_LOGI(TAG, "/readAlarms.json requested");
-	//todo: make that with return type of char array, e.g. make it flexible not with fixed alarmJSON[]
-	esp_err_t err = app_nvs_load_alarms();
+	esp_err_t err = ESP_OK;
+	if( xSemaphoreAlarms != NULL )
+	{
+		/* See if we can obtain the semaphore.  If the semaphore is not
+		available wait 10 ticks to see if it becomes free. */
+		if( xSemaphoreTake( xSemaphoreAlarms, ( TickType_t ) 10 ) == pdTRUE )
+		{
+			/* We were able to obtain the semaphore and can now access the
+			shared resource. */
+
+			//todo: make that with return type of char array, e.g. make it flexible not with fixed alarmJSON[]
+			err = app_nvs_load_alarms();
+			/* ... */
+
+			/* We have finished accessing the shared resource.  Release the
+			semaphore. */
+			xSemaphoreGive( xSemaphoreAlarms );
+		}
+		else
+		{
+			/* We could not obtain the semaphore and can therefore not access
+			the shared resource safely. */
+		  // todo: chang
+		  err = ESP_FAIL;
+		}
+	}
 
 	if(err == ESP_OK){
 	  ESP_LOGI(TAG, "Read Alarms from NVS OK");
 	  httpd_resp_set_type(req, "application/json");
 	  httpd_resp_send(req, alarmJSON, strlen(alarmJSON));
+	}
+	else if(err == ESP_FAIL){
+	  ESP_LOGI(TAG, "Read Alarms from NVS FAIL");
 	}
 
 	return ESP_OK;
@@ -720,6 +748,11 @@ static httpd_handle_t http_server_configure(void)
 			"http_server_configure: Starting server on port: '%d' with task priority: '%d'",
 			config.server_port,
 			config.task_priority);
+
+    /* Create the semaphore to guard a shared resource.  As we are using
+    the semaphore for mutual exclusion we create a mutex semaphore
+    rather than a binary semaphore. */
+    xSemaphoreAlarms = xSemaphoreCreateMutex();
 
 	// Start the httpd server
 	if (httpd_start(&http_server_handle, &config) == ESP_OK)

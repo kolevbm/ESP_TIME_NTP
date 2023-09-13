@@ -6,10 +6,11 @@ idf_component_register(
          rgb_led.c
          wifi_app.c
          http_server.c
-         temp_rh_meas.c
+         #temp_rh_meas.c
          app_nvs.c
-         wifi_reset_button.c
+         #wifi_reset_button.c
          sntp_time_sync.c
+         alarms_app.c
          #mqtt_bk.c
          #uart_bk.c
          #UART/uart_bk_WORKING.c

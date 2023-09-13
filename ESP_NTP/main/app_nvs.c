@@ -316,3 +316,43 @@ esp_err_t app_nvs_load_alarms (void)
   return err;
 }
 
+/**
+ * Loads the previously saved Alarms.
+ * @return esp error type
+ */
+esp_err_t app_nvs_load_alarms_p (char* jsonAlarms_p, size_t jsonAlarms_length)
+{
+
+  nvs_handle handle;
+  esp_err_t err;
+  // Open NVS
+  err = nvs_open (app_nvs_alarms_namespace, NVS_READWRITE, &handle);
+  ESP_LOGI(TAG, "nvs opened, now reading json");
+
+  // first get the size
+  size_t required_size;
+  err = nvs_get_str (handle, "Alarms", NULL, &required_size);
+  // second allocate memory for the string
+  char* str_value = malloc (required_size);
+  err = nvs_get_str(handle, "Alarms", str_value, &required_size);
+
+  switch (err) {
+	case ESP_OK:
+	  ESP_LOGI(TAG, "Alarms: %s", str_value);
+	  // after successful reading of NVS copy the json string in the extern variable
+	  strcpy(jsonAlarms_p, str_value);
+	  break;
+	case ESP_ERR_NVS_NOT_FOUND:
+	  ESP_LOGI(TAG, "Alarms not initialized yet");
+	  break;
+	default:
+	  ESP_LOGI(TAG, "Error (%s) reading!\n", esp_err_to_name (err));
+  }
+  // free the allocated memory
+  free(str_value);
+
+  // Close the NVS handle
+  nvs_close (handle);
+  return err;
+}
+

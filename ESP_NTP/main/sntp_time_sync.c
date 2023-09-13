@@ -60,7 +60,6 @@ static void sntp_time_sync_obtain_time(void)
 	// Check the time, in case we need to initialize/reinitialize
 	if (time_info.tm_year < (2016 - 1900))
 	{
-
 		sntp_time_sync_init_sntp();
 		// Set the local time zone
 		setenv("TZ", "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00", 1);
@@ -106,6 +105,28 @@ char* sntp_time_sync_get_time(void)
 	}
 
 	return time_buffer;
+}
+
+time_t sntp_time_sync_get_time_t(void)
+{
+	static char time_buffer[100] = {0};
+	time_t now = 0;
+	struct tm time_info = {0};
+
+	time(&now);
+	localtime_r(&now, &time_info);
+
+	if (time_info.tm_year < (2016 - 1900))
+	{
+		ESP_LOGI(TAG, "Time is not set yet");
+	}
+	else
+	{
+		strftime(time_buffer, sizeof(time_buffer), "%d.%m.%Y %H:%M:%S", &time_info);
+		ESP_LOGI(TAG, "Current time info: %s", time_buffer);
+	}
+
+	return now;
 }
 
 void sntp_time_sync_task_start(void)

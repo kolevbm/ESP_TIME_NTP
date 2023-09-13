@@ -48,6 +48,12 @@ esp_err_t app_nvs_save_alarms(void);
  * Loads the previously saved Alarms.
  * @return esp error type
  */
+esp_err_t app_nvs_load_alarms_p (char *jsonAlarms_p, size_t jsonAlarms_length);
+
+/**
+ * Loads the previously saved Alarms.
+ * @return esp error type
+ */
 esp_err_t app_nvs_load_alarms (void);
 
 #endif /* MAIN_APP_NVS_H_ */
