@@ -16,9 +16,13 @@
 #include "sntp_time_sync.h"
 #include "wifi_app.h"
 #include "rgb_led.h"
+#include "app_nvs.h"
+#include "json.h"
 
 static const char TAG[] = "sntp_time_sync";
 
+// EXTERN VARIABLES
+extern SemaphoreHandle_t xSemaphoreAlarms;
 // SNTP operating mode set status
 static bool sntp_op_mode_set = false;
 
@@ -127,6 +131,42 @@ time_t sntp_time_sync_get_time_t(void)
 	}
 
 	return now;
+}
+
+void alarms_processing(void)
+{
+	esp_err_t err = ESP_OK;
+	if (xSemaphoreAlarms != NULL) {
+		/* See if we can obtain the semaphore.  If the semaphore is not
+		 available wait 10 ticks to see if it becomes free. */
+		if ( xSemaphoreTake( xSemaphoreAlarms, ( TickType_t ) 10 ) == pdTRUE) {
+			/* We were able to obtain the semaphore and can now access the
+			 shared resource. */
+			char *jsonAlarms = malloc(250);
+			size_t json_size = sizeof(jsonAlarms);
+
+			if (jsonAlarms != NULL) {
+				err = app_nvs_load_alarms_p(jsonAlarms, json_size);
+				ESP_LOGI(TAG, "alarms read: %s", jsonAlarms);
+
+
+			}
+
+			free(jsonAlarms);
+//			app_nvs_load_alarms_p
+
+			/* ... */
+			/* We have finished accessing the shared resource.  Release the
+			 semaphore. */
+			xSemaphoreGive(xSemaphoreAlarms);
+		}
+		else {
+			/* We could not obtain the semaphore and can therefore not access
+			 the shared resource safely. */
+			err = ESP_FAIL;
+		}
+	}
+
 }
 
 void sntp_time_sync_task_start(void)

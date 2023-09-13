@@ -570,7 +570,7 @@ static esp_err_t http_server_submitAlarms_json_handler(httpd_req_t *req)
 	size_t len_alarm = 0;
 	char *alarm_str = NULL;
 
-	char alarm1[15], alarm2[15], alarm3[15], alarm4[15], alarm5[15], alarm[15], alarm6[15], alarm7[15] ;
+	char alarm1[15], alarm2[15], alarm3[15], alarm4[15], alarm5[15], alarm6[15], alarm7[15] ;
 
 
 	// Get Alarm headers
