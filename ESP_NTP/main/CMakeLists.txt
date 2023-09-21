@@ -10,7 +10,7 @@ idf_component_register(
          app_nvs.c
          #wifi_reset_button.c
          sntp_time_sync.c
-         #alarms_app.c
+         alarms_app.c
          #mqtt_bk.c
          #uart_bk.c
          #UART/uart_bk_WORKING.c

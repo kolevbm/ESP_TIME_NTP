@@ -68,6 +68,10 @@ void alarms_processing(void)
 
 			//todo: 2. extract the json string to a struture
 
+
+
+
+
 			free(jsonAlarms);
 
 			/* We have finished accessing the shared resource.  Release the
@@ -86,6 +90,7 @@ void alarms_processing(void)
 static void alarm_task(void *pvParam)
 {
 	ESP_LOGI(TAG, "ALARMS Task started");
+
 	time_t time_now = 0;
 
 	// todo: get the alarms from NVS
@@ -97,14 +102,19 @@ static void alarm_task(void *pvParam)
 		// todo: 1. if a new alarm is stored in NVS read it, use flags
 
 		// todo 2. get current time
-//		sntp_time_sync_get_time_t();
+
+		//time_now = sntp_time_sync_get_time_t();
+		//create an empty struct to store the time in
+		struct tm time_info = { 0 };
+		// get current time
+		time(&time_now);
+		// Convert given time since epoch (a time_t value pointed to by timer) into calendar time
+		localtime_r(&time_now, &time_info);
+
 
 		// todo 3. check if current time is equal to an alarm set and ring the alarm
 
 
-		time_now = sntp_time_sync_get_time_t();
-		struct tm time_info = { 0 };
-		localtime_r(&time_now, &time_info);
 
 		vTaskDelay(10000 / portTICK_PERIOD_MS);
 	}
