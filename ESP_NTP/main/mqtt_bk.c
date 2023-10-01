@@ -107,12 +107,10 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 		free(baseTopic);
 
 		// connected to broker inform the user with LED indication
-		gpio_set_level(GPO_PIN, 1);
 		break;
 
 	case MQTT_EVENT_DISCONNECTED:
 		ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
-		gpio_set_level(GPO_PIN, 1);
 		mqttConnected = false;
 		break;
 

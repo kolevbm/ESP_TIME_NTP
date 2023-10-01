@@ -25,10 +25,5 @@ char* sntp_time_sync_get_time(void);
  */
 time_t sntp_time_sync_get_time_t(void);
 
-/**
- *  Process alarms
- *  Get alarms from NVS and compare with current time
- */
 
-void alarms_processing(void);
 #endif /* MAIN_SNTP_TIME_SYNC_H_ */

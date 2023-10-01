@@ -27,6 +27,7 @@
 #include "app_nvs.h"
 #include "board_config.h"
 #include "rgb_led.h"
+#include "alarms_app.h"
 
 static const char TAG[] = "main";
 uint16_t serialNumber;
@@ -70,6 +71,8 @@ void app_main(void) {
 //	uart_app_start();
 
 //	temp_rh_meas_app_start();
+
+	alarms_task_start();
 
 	// Set connected event callback
 	wifi_app_set_callback(wifi_application_connected_events);

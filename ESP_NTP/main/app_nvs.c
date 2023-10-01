@@ -18,6 +18,8 @@
 // EXTERN variables
 extern char alarmJSON;
 
+// GLOBAL variables
+bool f_newAlarm = false;
 
 // Tag for logging to the monitor
 static const char TAG[] = "nvs";
@@ -269,6 +271,7 @@ esp_err_t app_nvs_save_alarms(void){
   }
   else{
 	ESP_LOGI(TAG, "Writing of Alarms OK");
+	f_newAlarm = true;
   }
   // Close the NVS handle
   nvs_close (handle);

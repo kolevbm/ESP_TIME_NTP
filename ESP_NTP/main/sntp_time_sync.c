@@ -21,6 +21,10 @@ static const char TAG[] = "sntp_time_sync";
 
 // EXTERN VARIABLES
 
+
+// GLOBAL VARIABLES
+bool timeIsSynchronized = false;
+
 // SNTP operating mode set status
 static bool sntp_op_mode_set = false;
 
@@ -64,20 +68,25 @@ static void sntp_time_sync_obtain_time(void)
 		// Set the local time zone
 		setenv("TZ", "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00", 1);
 		tzset();
-		set_led_work_state(LED_WORK_STATE_SLOW_BLINK);
 	}
 }
 
 /**
- * The SNTP time synchronization task.
+ * The SNTP time synchronization TASK.
  * @param arg pvParam.
  */
 static void sntp_time_sync(void *pvParam)
 {
 	ESP_LOGI(TAG, "SNTP Task started");
+
+	sntp_time_sync_obtain_time();
+	timeIsSynchronized = true;
+	set_led_work_state(LED_WORK_STATE_SLOW_BLINK);
+
 	while (1) {
+		// sync again after 5 mins
+		vTaskDelay(300000 / portTICK_PERIOD_MS);
 		sntp_time_sync_obtain_time();
-		vTaskDelay(10000 / portTICK_PERIOD_MS);
 	}
 
 	vTaskDelete(NULL);
