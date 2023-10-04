@@ -73,6 +73,15 @@
 				<label for="alarm7">Аларма 7: </label>
 				<input type="time" id="alarm7" name="alarm7" required />
 			</p>
+			<p>
+				<label for="alarm7">Пауза, сек: </label>
+				<input type="number" id="delay" name="delay" required maxlength="2" max="10" min="1"
+					placeholder="сек.">
+			</p>
+			<p>
+				<label for="alarm7">Повторение: </label>
+				<input type="number" id="repetition" name="repetition" required max="10" min="1" placeholder="брой">
+			</p>
 
 			<input class="alarmbtns" type="submit" id="submitBtn" name="submitBtn" value="Запис" />
 			<input class="alarmbtns" type="button" id="readBtn" name="readBtn" value="Четене" />
@@ -95,14 +104,14 @@
 		</div>
 
 		<div id="ConnectInfo" class="connectionGrid">
-			<div id="connected_ap_label">1</div>
-			<div id="connected_ap">2</div>
-			<div id="ip_address_label">3</div>
-			<div id="wifi_connect_ip">4</div>
-			<div id="netmask_label">5</div>
-			<div id="wifi_connect_netmask">6</div>
-			<div id="gateway_label">7</div>
-			<div id="wifi_connect_gw">8</div>
+			<div id="connected_ap_label"></div>
+			<div id="connected_ap"></div>
+			<div id="ip_address_label"></div>
+			<div id="wifi_connect_ip"></div>
+			<div id="netmask_label"></div>
+			<div id="wifi_connect_netmask"></div>
+			<div id="gateway_label"></div>
+			<div id="wifi_connect_gw"></div>
 			<div class="buttons">
 				<input id="disconnect_wifi" type="button" value="Disconnect" />
 			</div>

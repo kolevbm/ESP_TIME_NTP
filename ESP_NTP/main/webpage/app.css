@@ -146,6 +146,11 @@ input[type="button"] {
      //   inset -2px -2px 3px rgba(0, 0, 0, .6);
 }
 
+
+#repetition {
+    width: 3.5em;
+  }
+  
 input[type="button"]:hover {
     background-color: RGBA(112, 164, 222, 0.68);
 }

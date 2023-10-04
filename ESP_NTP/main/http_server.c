@@ -34,7 +34,7 @@ extern bool g_sta_connected;
 
 
 // GLOBAL variables
-char alarmJSON[250];
+char alarmJSON[300];
 SemaphoreHandle_t xSemaphoreAlarms = NULL;
 
 bool OTA_update = false;
@@ -570,7 +570,7 @@ static esp_err_t http_server_submitAlarms_json_handler(httpd_req_t *req)
 	size_t len_alarm = 0;
 	char *alarm_str = NULL;
 
-	char alarm1[15], alarm2[15], alarm3[15], alarm4[15], alarm5[15], alarm6[15], alarm7[15] ;
+	char alarm1[15], alarm2[15], alarm3[15], alarm4[15], alarm5[15], alarm6[15], alarm7[15], delay[3], repetition[3] ;
 
 
 	// Get Alarm headers
@@ -651,8 +651,28 @@ static esp_err_t http_server_submitAlarms_json_handler(httpd_req_t *req)
 			strcpy(alarm7, alarm_str);
 		}
 	}
-	sprintf(alarmJSON, "{\"alarm1\" : \"%s\",  \"alarm2\" : \"%s\", \"alarm3\" : \"%s\", \"alarm4\" : \"%s\", \"alarm5\" : \"%s\", \"alarm6\" : \"%s\", \"alarm7\" : \"%s\"}",
-						  alarm1, alarm2, alarm3, alarm4, alarm5, alarm6, alarm7);
+	len_alarm = httpd_req_get_hdr_value_len(req, "delay") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "delay", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => delay: %s", alarm_str);
+			strcpy(delay, alarm_str);
+		}
+	}
+	len_alarm = httpd_req_get_hdr_value_len(req, "repetition") + 1;
+	if (len_alarm > 1)
+	{
+		alarm_str = malloc(len_alarm);
+		if (httpd_req_get_hdr_value_str(req, "repetition", alarm_str, len_alarm) == ESP_OK)
+		{
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: Found header => repetition: %s", alarm_str);
+			strcpy(repetition, alarm_str);
+		}
+	}
+	sprintf(alarmJSON, "{\"alarm1\" : \"%s\",  \"alarm2\" : \"%s\", \"alarm3\" : \"%s\", \"alarm4\" : \"%s\", \"alarm5\" : \"%s\", \"alarm6\" : \"%s\", \"alarm7\" : \"%s\", \"delay\" : \"%s\", \"repetition\" : \"%s\"}",
+						  alarm1, alarm2, alarm3, alarm4, alarm5, alarm6, alarm7, delay, repetition);
 
 	esp_err_t err = app_nvs_save_alarms();
 	if(err == ESP_OK){

@@ -368,6 +368,8 @@ function submitAlarms()
 	let alarm5 = $("#alarm5").val();
 	let alarm6 = $("#alarm6").val();
 	let alarm7 = $("#alarm7").val();
+	let delay  = $('#delay').val();
+	let repetition = $('#repetition').val();
 	console.log(`Submit button is pressed`);
 	
 	
@@ -382,12 +384,33 @@ function submitAlarms()
 				'alarm4': alarm4,
 				'alarm5': alarm5,
 				'alarm6': alarm6,
-				'alarm7': alarm7, },
+				'alarm7': alarm7,
+				'delay': delay,
+				'repetition':repetition},
 		data: {'timestamp': Date.now()}
 	});
 	
 }
 
+$("#delay" ).keyup(function() {
+	if($('#delay').val()<1 ){
+		$('#delay').val(1);
+	}
+	if($('#delay').val()>10 ){
+		$('#delay').val(10);
+	}
+	
+   });
+
+$("#repetition" ).keyup(function() {
+	if($('#repetition').val()<1 ){
+		$('#repetition').val(1);
+	}
+	if($('#repetition').val()>10 ){
+		$('#repetition').val(10);
+}
+
+});
 /**
  *  Read the alarms saved in the server.
  */
@@ -403,6 +426,8 @@ function readAlarms()
 			$("#alarm5").val(data["alarm5"]);
 			$("#alarm6").val(data["alarm6"]);
 			$("#alarm7").val(data["alarm7"]);
+			$("#delay").val(data["delay"]);
+			$("#repetition").val(data["repetition"]);
 
 			console.log(data["alarm1"]);
 			console.log(data["alarm2"]);
@@ -411,6 +436,8 @@ function readAlarms()
 			console.log(data["alarm5"]);
 			console.log(data["alarm6"]);
 			console.log(data["alarm7"]);
+			console.log(data["delay"]);
+			console.log(data["repetition"]);
 			
 
 		});

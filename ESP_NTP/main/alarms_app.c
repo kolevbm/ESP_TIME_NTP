@@ -37,6 +37,8 @@ char alarm4[] = "hh:mm";
 char alarm5[] = "hh:mm";
 char alarm6[] = "hh:mm";
 char alarm7[] = "hh:mm";
+int alarm_delay_ms = 2000;
+int alarm_repetition = 3;
 
 // FUNCTION DECLARATIONs
 
@@ -70,7 +72,7 @@ void alarms_processing(void)
 			 shared resource. */
 
 			//todo: 1. read the alarms from NVS
-			char *jsonAlarms = malloc(250);
+			char *jsonAlarms = malloc(300);
 			size_t json_size = sizeof(jsonAlarms);
 
 			if (jsonAlarms != NULL) {
@@ -87,6 +89,9 @@ void alarms_processing(void)
 					const cJSON *json_alarm5 = NULL;
 					const cJSON *json_alarm6 = NULL;
 					const cJSON *json_alarm7 = NULL;
+					const cJSON *json_delay = NULL;
+					const cJSON *json_repetition = NULL;
+
 
 					cJSON *json_body = cJSON_Parse(jsonAlarms);
 
@@ -137,7 +142,20 @@ void alarms_processing(void)
 					json_alarm7 = cJSON_GetObjectItemCaseSensitive(json_body, "alarm7");
 					if (cJSON_IsString(json_alarm7) && (json_alarm7->valuestring != NULL)) {
 						strcpy(alarm7, json_alarm7->valuestring);
-						ESP_LOGD(TAG, "Checking monitor \"%s\"\n", json_alarm7->valuestring);
+						ESP_LOGI(TAG, "Checking monitor \"%s\"\n", json_alarm7->valuestring);
+					}
+					// alarm delay
+					json_delay = cJSON_GetObjectItemCaseSensitive(json_body, "delay");
+					if (cJSON_IsString(json_delay) && (json_delay->valueint != NULL)) {
+						alarm_delay_ms = json_delay->valueint;
+						alarm_delay_ms *=1000;
+						ESP_LOGI(TAG, "Checking monitor \"%i\"\n", json_delay->valueint);
+					}
+					// alarm repetition
+					json_repetition = cJSON_GetObjectItemCaseSensitive(json_body, "repetition");
+					if (cJSON_IsString(json_repetition) && (json_repetition->valueint != NULL)) {
+						alarm_repetition = json_repetition->valueint;
+						ESP_LOGI(TAG, "Checking monitor \"%i\"\n", json_repetition->valueint);
 					}
 
 					cJSON_Delete(json_body); 	// free space from malloc
@@ -197,8 +215,7 @@ static void alarm_task(void *pvParam)
 	// make the initial reading
 	alarms_processing();
 	configure_GPIO();
-	int alarm_delay_ms = 2000;
-	int alarm_repetition = 3;
+
 
 	while (1) {
 
@@ -224,7 +241,7 @@ static void alarm_task(void *pvParam)
 		if (timeIsSynchronized) {
 			ESP_LOGI(TAG, "Time Synchronized, alarms will be triggered");
 			char currentTime[] = "hh:mm";
-			sprintf(currentTime, "%i:%i", time_info.tm_hour, time_info.tm_min);
+			sprintf(currentTime, "%02i:%02i", time_info.tm_hour, time_info.tm_min);
 			ESP_LOGI(TAG, "Time is: %s", currentTime);
 
 			if (strcmp(alarm1, currentTime) == 0) {
